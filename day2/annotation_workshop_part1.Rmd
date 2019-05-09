@@ -1,0 +1,139 @@
+---
+title: "Intro to Bioconductor annotation resources"
+author: "Dandan_Peng"
+date: "5/9/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r}
+load("/Users/pengdandan/Bioinformatics-100-days/bioinformatics-100-days/day2/eset.Rdata")
+eset
+```
+```{r}
+head(exprs(eset))
+```
+```{r}
+head(pData(phenoData(eset)))
+```
+```{r}
+head(pData(featureData(eset)))
+```
+
+say we have analyzed data from an Affymetrix Human Gene ST 2.0 array and want to know whta the genes are
+```{r}
+library(hugene20sttranscriptcluster.db)
+set.seed(12345)
+ids <- featureNames(eset)[sample(1:25000,5)]
+ids
+```
+```{r}
+select(hugene20sttranscriptcluster.db,ids,"SYMBOL")
+```
+What keytypes or columns are available for a given annotation package?
+
+```{r}
+keytypes(hugene20sttranscriptcluster.db)
+```
+```{r}
+columns(hugene20sttranscriptcluster.db)
+```
+
+issue with select
+```{r}
+ids <- c("16737401","16657436","16678303")
+select(hugene20sttranscriptcluster.db,ids,c("SYMBOL","MAP"))
+```
+
+mapIds gives control of duplicates
+```{r}
+mapIds(hugene20sttranscriptcluster.db,ids,"SYMBOL","PROBEID")
+```
+```{r}
+mapIds(hugene20sttranscriptcluster.db,ids,"SYMBOL","PROBEID",multiVals = "list")
+```
+
+```{r}
+mapIds(hugene20sttranscriptcluster.db,ids,"SYMBOL","PROBEID",multiVals = "CharacterList")
+```
+
+```{r}
+mapIds(hugene20sttranscriptcluster.db,ids,"SYMBOL","PROBEID",multiVals = "filter")
+```
+
+```{r}
+mapIds(hugene20sttranscriptcluster.db,ids,"SYMBOL","PROBEID",multiVals = "asNA")
+```
+
+## Transcript packages
+```{r}
+library(TxDb.Hsapiens.UCSC.hg19.knownGene)
+select(TxDb.Hsapiens.UCSC.hg19.knownGene, c("1","10"),c("TXNAME","TXCHROM","TXSTART","TXEND"), "GENEID")
+```
+```{r}
+library(EnsDb.Hsapiens.v79)
+select(EnsDb.Hsapiens.v79,c("1", "10"),c("GENEID","GENENAME","SEQNAME","GENESEQSTART","GENESEQEND"), "ENTREZID")
+```
+
+normal use case for transcript packages is to extract positional information into a Granges or GrangeList
+```{r}
+gns <- genes(TxDb.Hsapiens.UCSC.hg19.knownGene)
+gns
+```
+
+or the genomic position of all transcripts by gene
+```{r}
+txs <- transcriptsBy(TxDb.Hsapiens.UCSC.hg19.knownGene)
+txs
+```
+
+Granges and GrangeLists act like data.frames and lists
+```{r}
+txs[txs %over% gns[1:2,]]
+```
+
+*Ranges use cases
+- Gene expression changes near differentially methylated CpG islands
+- Closest genes to a set of interesting SNPs
+- Genes near DNAsel hypersensitivity clusters
+- Number of CpGs measured over Gene X by Chip Y
+
+## OrganismDb packages
+```{r}
+library(Homo.sapiens)
+Homo.sapiens
+```
+
+```{r}
+head(genes(Homo.sapiens,columns = c("ENTREZID","ALIAS","UNIPROT")),4)
+```
+
+## Organism.dplyr package
+combines the data from TxDb and Org.Db associated packages into local database
+```{r}
+library(Organism.dplyr)
+src <- src_organism(dbpath = hg38light())
+src
+```
+
+get promoters from a TxDb object 
+```{r}
+options(width = 120)
+promoters(src)
+```
+
+extract a table from the underlying database
+```{r}
+tbl(src,"id")
+```
+
+make a complex query between tables in the underlying database
+```{r}
+inner_join(tbl(src,"id"),tbl(src,"ranges_gene")) %>%
+  filter(symbol %in% c("ADA","NAT2")) %>%
+  dplyr::select(gene_chrom,gene_start,gene_end,gene_strand,symbol,alias,map)
+```
