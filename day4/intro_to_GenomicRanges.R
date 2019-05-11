@@ -170,3 +170,99 @@ joined <- query[queryHits(hits)]
 joined$score <- subject$score[subjectHits(hits)]
 
 ranges(joined) <- ranges(pintersect(joined, subject[subjectHits(hits)]))
+
+# group the subject hits by query hits
+hitsByQuery <- as(hits,"List")
+
+# hitsByQuery is an IntegerList, it has many methods for efficient aggregation
+counts <- countQueryHits(hits)
+counts <- countOverlaps(query,subject,ignore.strand = TRUE)
+unname(counts)
+
+# annotate each query with the maximum score among the subject hits
+query$maxScore <- max(extractList(subject$score,hitsByQuery))
+subset(query,maxScore > 0)
+
+hits <- findOverlaps(query, subject, select="first", ignore.strand=TRUE)
+hits <- findOverlaps(query, subject, select="arbitrary", ignore.strand=TRUE)
+hits
+
+# Example: exploring BigWig files from AnnotationHub
+library(AnnotationHub)
+ah <- AnnotationHub()
+roadmap_hub <- query(ah,"EpigenomeRoadMap")
+metadata <- query(ah,"Metadata")[[1L]]
+head(metadata)
+
+# find out the name of the sample corresponding to primary memory T-cells
+primary_tcells <- subset(metadata,
+                         ANATOMY == "BLOOD" & TYPE == "PrimaryCell" &
+                          EDACC_NAME == "CD8_Memory_Primary_Cells")$EID
+# extract the sample ID corresponding to the filter
+primary_tcells <- as.character(primary_tcells)
+
+# take roadmap hub and query it based on other conditions
+methylation_files <- query(roadmap_hub,
+                           c("BigWig",primary_tcells,"H3K4ME[1-3]",
+                             "pval.signal"))
+methylation_files
+
+bw_files <- lapply(methylation_files[1:2],`[[`,1L)
+
+# extract the genome information from the first BigWig file and filter to get the range for chromosome 10
+chr10_ranges <- Seqinfo(genome="hg19")["chr10"]
+
+# read the BigWig file only extracting scores if they overlap chromosome 10
+library(rtracklayer)
+chr10_scores <- lapply(bw_files, import, which = chr10_ranges,
+                       as = "RleList") 
+chr10_scores[[1]]$chr10
+
+islands <- lapply(chr10_scores, slice, lower=1L)
+summits <- lapply(islands, viewRangeMaxs)
+
+summits <- lapply(lapply(summits, `+`, 50L), reduce)
+
+summits_grs <- lapply(summits, GRanges)
+score_grs <- mapply(function(scores, summits) {
+  summits$score <- scores[summits]
+  seqlengths(summits) <- lengths(scores)
+  summits
+}, chr10_scores, summits_grs)
+score_gr <- stack(GenomicRangesList(score_grs), index.var="signal_type")
+
+score_gr$score_max <- max(score_gr$score)
+chr10_max_score_region <- aggregate(score_gr, score_max ~ signal_type, max)
+
+# Example: coverage analysis of BAM files
+library(tools)
+bams <- list_files_with_exts(system.file("extdata", package = "airway"), "bam")
+names(bams) <- sub("_[^_]+$", "", basename(bams))
+library(Rsamtools)
+bams <- BamFileList(bams)
+
+# compute the coverage of the alignments over all contigs in the BAM
+first_bam <- bams[[1L]]
+first_bam_cvg <- coverage(first_bam)
+
+head(table(first_bam_cvg)[1L,])
+
+# read the BAM file into a GAlignments object using readGAlignments() and extract the ranges, chopping by introns, using grglist()
+library(GenomicAlignments)
+reads <- grglist(readGAlignments(first_bam))
+
+reads[lengths(reads) >= 2L]
+
+# count how many reads overlap each gene
+# get the transcript structures as a GrangeList from Ensembl
+reads[lengths(reads) >= 2L]
+library(EnsDb.Hsapiens.v75)
+tx <- exonsBy(EnsDb.Hsapiens.v75, "gene")
+
+reads <- keepStandardChromosomes(reads)
+counts <- countOverlaps(tx, reads, ignore.strand=TRUE)
+head(counts[counts > 0])
+
+airway <- summarizeOverlaps(features=tx, reads=bams,
+                            mode="Union", singleEnd=FALSE,
+                            ignore.strand=TRUE, fragments=TRUE)
