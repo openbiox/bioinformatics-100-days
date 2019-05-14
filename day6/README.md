@@ -1,3 +1,4 @@
+# RNA-seq analysis (RNA123 workflow)
 ## Data packaging
 - Reading in count-data
 - Organizing sample imformation
