@@ -1,5 +1,5 @@
 ## RNA-seq analysis
-## analyse RNA-seq datafrom the mouse mammary gland, use edgeR package to import, organise, filter and 
+## analyse RNA-seq data from the mouse mammary gland, use edgeR package to import, organise, filter and 
 ## normalize the data, yse limma package with its voom method, linear modelling and empirical Bayes moderation
 ## to asses differential expression and graphical representations
 ## Glimma package enables interactive exploration of the results so that individual samples and genes can be 
@@ -145,9 +145,87 @@ col.lane <- as.character(col.lane)
 plotMDS(lcpm, labels=group, col=col.group)
 title(main="A. Sample groups")
 plotMDS(lcpm, labels=lane, col=col.lane, dim=c(3,4))
+title(main="B. Sequencing lanes")
 
 glMDSPlot(lcpm, labels=paste(group, lane, sep="_"), 
           groups=x$samples[,c(2,5)], launch=FALSE)
 
 
-title(main="B. Sequencing lanes")
+## Differential expression analysis 
+# creating a design matrix and contrasts
+# set up a design matrix with cell population and sequencing lane information
+design <- model.matrix(~0+group+lane)
+# model.matrix creates a design matrix, e.g by expanding factors to a set of dummy variables
+colnames(design) <- gsub("group", "", colnames(design))
+design
+
+# contrasts for pairwise comparisons between cell populations
+contr.matrix <- makeContrasts(
+  BasalvsLP = Basal - LP,
+  BasalvsML = Basal - ML,
+  LPvsML = LP - ML,
+  levels = colnames(design)
+)
+contr.matrix
+
+# removing heteroscedascity from count data 
+par(mfrow = c(1,2)) # par can be used to set or query graphical parameters
+                    # mfrow: a vector of the form c(nr, nc). Subsequent figures will be drawn in an nr-by-nc array on
+                    # the device by rows (mfrow)
+
+v <- voom(x,design,plot = TRUE) # voom converts raw counts to log-CPM values by automatically extracting library sizes 
+                                # and normalization factors from x itself
+v # voom-plot provides a visual check on the level of filtering performed upstream
+
+vfit <- lmFit(v, design)
+vfit <- contrasts.fit(vfit, contrasts = contr.matrix)
+efit <- eBayes(vfit)
+plotSA(efit, main = "Final model: Mean-Variance trend")
+
+# fitting linear models for comparisons of interest
+# examining the number of DE genes
+summary(decideTests(efit)) # significance is defined using an adjusted p-value cutoff that is set at 5% by default
+
+# treat method can be used to calculate p-values from empirical Bayes moderated t-statistics with a minumum log-FC requirement
+tfit <- treat(vfit, lfc = 1)
+dt <- decideTests(tfit) # genes that are differentially expressed in multiple comparisons can be extracted using the results
+                        # from decideTests
+summary(dt)
+
+de.common <- which(dt[,1]!=0 & dt[,2]!=0)
+length(de.common)
+head(tfit$genes$SYMBOL[de.common], n = 20)
+vennDiagram(dt[,1:2], circle.col = c("turquoise","salmon"))
+
+write.fit(tfit, dt, file = "results.txt")
+
+
+## examining individual DE genes from top to bottom 
+basal.vs.lp <- topTreat(tfit, coef = 1, n = Inf)# By default topTreat arranges genes from smallest to largest adjusted p-value 
+                                                # with associated gene information, log-FC, average log-CPM, moderated t-statistic, 
+                                                # raw and adjusted p-value for each gene
+basal.vs.ml <- topTreat(tfit, coef = 2, n = Inf)
+head(basal.vs.lp)
+head(basal.vs.ml)
+
+# useful graphical representations of differential expression results
+# mean-difference plots, display log-FCs from the linear model fit against the average log-CPM values
+plotMD(tfit, column = 1, status = dt[,1], main = colnames(tfit)[1], xlim = c(-8, 13))
+
+glMDPlot(tfit, coef=1, status=dt, main=colnames(tfit)[1],
+         side.main="ENTREZID", counts=x$counts, groups=group, launch=FALSE)
+
+# heatmap for the top 100 DE genes (ranked by adjusted p-value)
+library(gplots)
+basal.vs.lp.topgenes <- basal.vs.lp$ENTREZID[1:100]
+i <- which(v$genes$ENTREZID %in% basal.vs.lp.topgenes)
+mycol <- colorpanel(1000,"blue","white","red")
+heatmap.2(v$E[i,], scale="row",
+          labRow=v$genes$SYMBOL[i], labCol=group, 
+          col=mycol, trace="none", density.info="none", 
+          margin=c(8,6), lhei=c(2,10), dendrogram="column")
+
+
+
+
+
