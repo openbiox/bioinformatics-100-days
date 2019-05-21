@@ -73,4 +73,65 @@ rowData(allSE,use.names = TRUE)
 # For RNA-seq data, the deAna function can be used to carry out differential expression analysis between the two groups either based
 # on functionality from limma, or alternatively, the frequently used edgeR or DESeq2 package.
 airSE <- deAna(airSE, de.method = "edgeR")
+
 rowData(airSE, use.names = TRUE)
+
+
+## Gene sets
+# check whether pre-defined sets of genes that are known to work together
+kegg.gs <- getGenesets(org = "hsa", db = "kegg") # download all KEGG pathways for Homo Sapien as gene sets
+
+go.gs <- getGenesets(org = "hsa", db = "go", go.onto = "BP", go.mode = "GO.db") # retrieve GO terms of biological process
+
+# if provided a file, function 'getGenesets' parses user-defined gene sets from GMT file format
+# here we use this for reading a list of already downloaded KEGG gene sets
+data.dir <- system.file("extdata", package = "EnrichmentBrowser")
+gmt.file <- file.path(data.dir, "hsa_kegg_gs.gmt")
+hsa.gs <- getGenesets(gmt.file)
+hsa.gs[1:2]
+
+## GO/KEGG overrepresentation analysis (ORA)
+# ORA is a basic and frequently used method of gene set analysis methods, it tests the overlap between DE genes and
+# genes in a gene set based on the hypergeometric distribution
+ora.all <- sbea(method = "ora", se = allSE, gs = hsa.gs, perm = 0, alpha = 0.2) # we choose a significanse level alpha = 0.2
+gsRanking(ora.all)
+
+eaBrowse(ora.all)
+
+airSE <- idMap(airSE, org = "hsa", from = "ENSEMBL", to = "ENTREZID") # map the airway dataset to Entrez IDs
+ora.air <- sbea(method = "ora", se = airSE, gs = hsa.gs, perm = 0)
+gsRanking(ora.air)
+
+## Functional class scoring & permutation testing
+gsea.all <- sbea(method = "gsea", se = allSE, gs = hsa.gs, perm = 1000)
+gsRanking(gsea.all)
+
+# adapted version of GSEA, allows incorporation of limma/voom, edgeR, or DESeq2
+gsea.air <- sbea(method = "gsea", se = airSE, gs = hsa.gs, perm = 100)
+
+# use rotation instead of permutation
+roast.air <- sbea(method = "roast", se = airSE, gs = hsa.gs)
+gsRanking(roast.air)
+
+# additional methods
+sbeaMethods()
+
+## Network-based enrichment analysis
+# having found gene sets that show enrichment for differential expression, we are now interested whether these findings can be
+# supported by known regulatory interactions, e.g: whehter transcription factors and their target genes are expressed in accordance
+# to the connecting regulations (activation/inhibition)
+
+# compile a network from regulations in pathway database
+hsa.grn <- compileGRN(org = "hsa", db = "kegg")
+head(hsa.grn)
+
+# signaling pathway impact analysis (SPIA)
+# evaluate whether expression changes are propagated across the pathway topology in combination with ORA
+spia.all <- nbea(method = "spia", se = allSE, gs = hsa.gs, grn = hsa.grn, alpha = 0.2)
+gsRanking(spia.all)
+
+# gene graph enrichment analysis (GGEA)
+ggea.all <- nbea(method = "ggea", se = allSE, gs = hsa.gs, grn = hsa.grn)
+gsRanking(ggea.all)
+
+nbeaMethods()
