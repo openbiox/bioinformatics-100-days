@@ -6,3 +6,5 @@
 ## Defining gene sets according to GO and KEGG
 ## GO/KEGG overrepresentation analysis
 ## Functional class scoring & Permutation testing
+## Network-based enrichment analysis
+## Genomic region enrichment analysis
