@@ -135,3 +135,41 @@ ggea.all <- nbea(method = "ggea", se = allSE, gs = hsa.gs, grn = hsa.grn)
 gsRanking(ggea.all)
 
 nbeaMethods()
+
+res.list <- list(ora.all, gsea.all)
+comb.res <- combResults(res.list)
+gsRanking(comb.res)
+
+## Genomic region enrichment analysis
+# whether experimentally-derived regions overlap more (enrichment) or less (depletion) than expected by chance with 
+# regions representing known functional features such as genes or promoters
+# regioneR package implements a framework to test overlaps of genomic regions 
+suppressPackageStartupMessages(library(regioneR))
+
+
+# to demonstrate the basic functionality of the package, we consider the overlap of gene promoter regions and CpG islands
+# in the human genome. We expect to find an enrichment as promoter regions are known to be GC-rich
+
+# use the collection of CpG islands and restrict them to the set of canonical chromosomes 
+cpgHMM <- toGRanges("http://www.haowulab.org/software/makeCGI/model-based-cpg-islands-hg19.txt")
+cogHMM <- filterChromosomes(cpgHMM, chr.type = "canonical")
+cpgHMM <- sort(cpgHMM)
+cpgHMM
+
+# load promoter regions in the hg19 human genome assembly 
+promoters <- toGRanges("http://gattaca.imppc.org/regioner/data/UCSC.promoters.hg19.bed")
+promoters <- filterChromosomes(promoters, chr.type = "canonical")
+promoters <- sort(promoters)
+promoters
+
+# restrict analysis to chromosome 21 and 22
+cpg <- cpgHMM[seqnames(cpgHMM) %in% c("chr21","chr22")]
+prom <- promoters[seqnames(promoters) %in% c("chr21", "chr22")]
+
+# apply an overlp permutation test with 100 permutations
+pt <- overlapPermTest(cpg, prom, genome="hg19", ntimes=100, per.chromosome=TRUE, count.once=TRUE)
+pt
+summary(pt[[1]]$permuted)
+
+
+
