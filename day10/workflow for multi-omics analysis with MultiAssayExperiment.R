@@ -65,3 +65,40 @@ ragexp2 <- RaggedExperiment(grl, colData = colDat)
 
 # the original ranges are represented as the rowRanges of the RaggedExperiment
 rowRanges(ragexp)
+
+
+## *Assay functions
+# A suite of *Assay operations allow users to resize the matrix-like representation of ranges to varying row dimensions.
+
+# sparseAssay
+# return a matrix with the number of rows equal to the total number of ranges defined across all samples
+sparseAssay(ragexp)
+unlist(grl) # correspond to the ranges of the unlisted GRangeList
+# (the rownames of the sparseAssay result are equal to the names of the GRanges elements. The values in the matrix returned
+# by sparseAssay correspond to the first columns of the mcols of each GRangeList element, in this case the "score" column.)
+
+# compactAssay
+# the dimensions of the compactAssay result differ from that of the sparseAssay result only if there are identical ranges
+# in different samples.
+compactAssay(ragexp)
+compactAssay(ragexp,"type")
+
+# disjointAssay
+disjoinAssay(ragexp, simplifyDisjoin = mean)
+
+# qreduceAssay
+# It requires you to provide a query argument that is a GRanges vector, and the rows of the resulting matrix correspond
+# to the elements of this GRanges.
+# The simplifyReduce argument in qreduceAssay allows the user to summarize overlapping regions with a custom method for 
+# the given "query" region of interest.
+weightedmean <- function(scores, ranges, qranges)
+{
+  isects <- pintersect(ranges, qranges)
+  sum(scores * width(isects)) / sum(width(isects))
+}
+
+grl
+
+(query <- GRanges(c("chr1:1-14:-", "chr1:15-18:+")))
+qreduceAssay(ragexp, query, simplifyReduce = weightedmean)  
+
