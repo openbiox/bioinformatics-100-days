@@ -104,17 +104,5 @@ miniACC2 <- c(miniACC, log2rnaseq = log2(assays(miniACC) $ RNASeq2GeneNorm), map
                                                                                          # that the order of the colnames is in the same
 experiments(miniACC2)
 
-##################
 
-# The Cancer Genome Atlas (TCGA) as MultiAssayExperiment objects
-library(curatedTCGAData)
-curatedTCGAData("ACC")
-suppressMessages({
-  acc <- curatedTCGAData("ACC",
-      assays = c("miRNASeqGene", "RPPAArray", "Mutation", "RNASeq2GeneNorm", "CNVSNP"),
-      dry.run = FALSE)
-})
-
-dim(colData(acc))
-tail(colnames(colData(acc)), 10)
 
