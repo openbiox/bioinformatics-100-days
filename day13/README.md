@@ -3,4 +3,4 @@
 - Getting started
 ## Cytoscape Basics
 ## Example Data Set
-# Use Case 1 - How are my top genes related?
+## Use Case 1 - How are my top genes related?
