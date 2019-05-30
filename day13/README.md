@@ -1,4 +1,4 @@
-# Cytoscape automation in R using Rcy3
+# Cytoscape automation in R using Rcy3 - part 1
 ## Set up
 - Getting started
 ## Cytoscape Basics
