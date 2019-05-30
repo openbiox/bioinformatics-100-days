@@ -1,0 +1,64 @@
+Name	Description	pvalue	qvalue	phenotype	genes
+GO:0002221	pattern recognition receptor signaling pathway	6.68e-05	6.68e-05	1	BTK,CD180,PTPN22,HAVCR2,ITGB2,CD14,CD300LF
+GO:0002224	toll-like receptor signaling pathway	1.38e-05	1.38e-05	1	BTK,CD180,PTPN22,HAVCR2,ITGB2,CD14,CD300LF
+GO:0030168	platelet activation	0.0018	0.0018	1	LCP2,PIK3CG,PLEK,PIK3R5,FCER1G
+GO:0050852	T cell receptor signaling pathway	0.000808	0.000808	1	CD4,WAS,LCP2,PTPRC,PTPN22
+GO:0097529	myeloid leukocyte migration	0.00051	0.00051	1	PIK3CG,NCKAP1L,FCER1G,ITGB2,C3AR1,AIF1
+GO:0097530	granulocyte migration	0.000808	0.000808	1	PIK3CG,NCKAP1L,FCER1G,ITGB2,C3AR1
+GO:1990266	neutrophil migration	0.000435	0.000435	1	PIK3CG,NCKAP1L,FCER1G,ITGB2,C3AR1
+GO:0071621	granulocyte chemotaxis	0.000496	0.000496	1	PIK3CG,NCKAP1L,FCER1G,ITGB2,C3AR1
+GO:0030593	neutrophil chemotaxis	0.000285	0.000285	1	PIK3CG,NCKAP1L,FCER1G,ITGB2,C3AR1
+GO:0071706	tumor necrosis factor superfamily cytokine production	1.02e-05	1.02e-05	1	CD86,SASH3,PTPN22,HAVCR2,FCER1G,CYBB,CD14
+GO:0032640	tumor necrosis factor production	7.52e-05	7.52e-05	1	SASH3,PTPN22,HAVCR2,FCER1G,CYBB,CD14
+GO:0002700	regulation of production of molecular mediator of immune response	0.000822	0.000822	1	BTK,PTPRC,SASH3,PTPN22,FCER1G
+GO:1903555	regulation of tumor necrosis factor superfamily cytokine production	8.87e-06	8.87e-06	1	CD86,SASH3,PTPN22,HAVCR2,FCER1G,CYBB,CD14
+GO:1903557	positive regulation of tumor necrosis factor superfamily cytokine production	8.21e-06	8.21e-06	1	CD86,SASH3,HAVCR2,FCER1G,CYBB,CD14
+GO:0032680	regulation of tumor necrosis factor production	6.68e-05	6.68e-05	1	SASH3,PTPN22,HAVCR2,FCER1G,CYBB,CD14
+GO:0032760	positive regulation of tumor necrosis factor production	7.57e-05	7.57e-05	1	SASH3,HAVCR2,FCER1G,CYBB,CD14
+GO:0002703	regulation of leukocyte mediated immunity	7.7e-06	7.7e-06	1	BTK,WAS,CD84,PTPRC,SASH3,HAVCR2,FCER1G,ITGB2
+GO:0002706	regulation of lymphocyte mediated immunity	0.00011	0.00011	1	BTK,WAS,PTPRC,SASH3,HAVCR2,FCER1G
+GO:0002285	lymphocyte activation involved in immune response	0.000393	0.000393	1	ITGAL,PTPRC,CD86,CD180,HAVCR2,FCER1G
+GO:0071216	cellular response to biotic stimulus	0.000632	0.000632	1	BTK,CD180,PTPN22,HAVCR2,CCR5,CD14
+GO:0002699	positive regulation of immune effector process	9.75e-06	9.75e-06	1	BTK,CD84,PTPRC,CD86,SASH3,PTPN22,FCER1G,ITGB2
+GO:0002705	positive regulation of leukocyte mediated immunity	0.000469	0.000469	1	BTK,PTPRC,SASH3,FCER1G,ITGB2
+GO:0070665	positive regulation of leukocyte proliferation	2.32e-06	2.32e-06	1	CD4,PTPRC,RASAL3,SASH3,NCKAP1L,PTPN22,HAVCR2,AIF1
+GO:0032623	interleukin-2 production	6.68e-05	6.68e-05	1	CD4,CD86,SASH3,HAVCR2,FCER1G
+GO:1903708	positive regulation of hemopoiesis	6.68e-05	6.68e-05	1	CD4,BTK,PTPRC,CD86,SASH3,NCKAP1L,EVI2B
+GO:1902107	positive regulation of leukocyte differentiation	2.04e-05	2.04e-05	1	CD4,BTK,PTPRC,CD86,SASH3,NCKAP1L,EVI2B
+GO:0045576	mast cell activation	3.79e-06	3.79e-06	1	BTK,LCP2,CD84,PIK3CG,FCER1G,CD300LF
+GO:0046631	alpha-beta T cell activation	0.000115	0.000115	1	PTPRC,RASAL3,CD86,SASH3,NCKAP1L,PTPN22
+GO:0046634	regulation of alpha-beta T cell activation	2.04e-05	2.04e-05	1	PTPRC,RASAL3,CD86,SASH3,NCKAP1L,PTPN22
+GO:0050866	negative regulation of cell activation	6.68e-05	6.68e-05	1	BTK,CD84,PTPN22,HAVCR2,SAMSN1,TNFAIP8L2,CD300LF
+GO:0002920	regulation of humoral immune response	0.000808	0.000808	1	PTPRC,C1QC,C3AR1,C1QB,C1QA
+GO:0002819	regulation of adaptive immune response	3.93e-07	3.93e-07	1	CD4,BTK,WAS,PTPRC,CD48,SASH3,HAVCR2,SAMSN1,FCER1G
+GO:0002822	regulation of adaptive immune response based on somatic recombination of immune receptors built from immunoglobulin superfamily domains	1.38e-05	1.38e-05	1	CD4,BTK,WAS,PTPRC,SASH3,HAVCR2,FCER1G
+GO:0002821	positive regulation of adaptive immune response	0.000305	0.000305	1	CD4,BTK,PTPRC,SASH3,FCER1G
+GO:0002824	positive regulation of adaptive immune response based on somatic recombination of immune receptors built from immunoglobulin superfamily domains	0.000268	0.000268	1	CD4,BTK,PTPRC,SASH3,FCER1G
+GO:0042098	T cell proliferation	1.73e-06	1.73e-06	1	CD4,PTPRC,RASAL3,PIK3CG,SASH3,NCKAP1L,PTPN22,HAVCR2,AIF1
+GO:0042100	B cell proliferation	0.000305	0.000305	1	BTK,PTPRC,SASH3,NCKAP1L,CD180
+GO:0002673	regulation of acute inflammatory response	2.44e-05	2.44e-05	1	BTK,PIK3CG,FCER1G,C1QC,C3AR1,C1QB,C1QA
+GO:0050864	regulation of B cell activation	0.00231	0.00231	1	BTK,PTPRC,SASH3,NCKAP1L,SAMSN1
+GO:0071219	cellular response to molecule of bacterial origin	0.00245	0.00245	1	CD180,PTPN22,HAVCR2,CCR5,CD14
+GO:0071222	cellular response to lipopolysaccharide	0.00216	0.00216	1	CD180,PTPN22,HAVCR2,CCR5,CD14
+GO:0002695	negative regulation of leukocyte activation	3.78e-05	3.78e-05	1	BTK,CD84,PTPN22,HAVCR2,SAMSN1,TNFAIP8L2,CD300LF
+GO:0032946	positive regulation of mononuclear cell proliferation	2.21e-06	2.21e-06	1	CD4,PTPRC,RASAL3,SASH3,NCKAP1L,PTPN22,HAVCR2,AIF1
+GO:0051250	negative regulation of lymphocyte activation	0.00112	0.00112	1	BTK,PTPN22,HAVCR2,SAMSN1,TNFAIP8L2
+GO:0042129	regulation of T cell proliferation	3.79e-06	3.79e-06	1	CD4,PTPRC,RASAL3,SASH3,NCKAP1L,PTPN22,HAVCR2,AIF1
+GO:0050671	positive regulation of lymphocyte proliferation	2.21e-06	2.21e-06	1	CD4,PTPRC,RASAL3,SASH3,NCKAP1L,PTPN22,HAVCR2,AIF1
+GO:0050870	positive regulation of T cell activation	2.21e-06	2.21e-06	1	CD4,PTPRC,RASAL3,CD86,SASH3,NCKAP1L,PTPN22,HAVCR2,AIF1
+GO:0046635	positive regulation of alpha-beta T cell activation	3.79e-06	3.79e-06	1	PTPRC,RASAL3,CD86,SASH3,NCKAP1L,PTPN22
+GO:0042102	positive regulation of T cell proliferation	3.93e-07	3.93e-07	1	CD4,PTPRC,RASAL3,SASH3,NCKAP1L,PTPN22,HAVCR2,AIF1
+GO:0045619	regulation of lymphocyte differentiation	0.00216	0.00216	1	BTK,PTPRC,CD86,SASH3,NCKAP1L
+GO:0045621	positive regulation of lymphocyte differentiation	0.000305	0.000305	1	BTK,PTPRC,CD86,SASH3,NCKAP1L
+GO:0010324	membrane invagination	0.000496	0.000496	1	NCKAP1L,FCGR1A,FCER1G,ITGB2,AIF1
+GO:0099024	plasma membrane invagination	0.000381	0.000381	1	NCKAP1L,FCGR1A,FCER1G,ITGB2,AIF1
+GO:0006911	phagocytosis, engulfment	0.000285	0.000285	1	NCKAP1L,FCGR1A,FCER1G,ITGB2,AIF1
+GO:0038093	Fc receptor signaling pathway	6.68e-05	6.68e-05	1	BTK,WAS,LCP2,NCKAP1L,FCGR2A,FCGR1A,FCER1G
+GO:0038094	Fc-gamma receptor signaling pathway	0.00107	0.00107	1	WAS,NCKAP1L,FCGR2A,FCGR1A,FCER1G
+GO:0002431	Fc receptor mediated stimulatory signaling pathway	0.00108	0.00108	1	WAS,NCKAP1L,FCGR2A,FCGR1A,FCER1G
+REAC:R-HSA-1236975	Antigen processing-Cross presentation	0.00182	0.00182	1	BTK,NCF4,FCGR1A,CYBB,CD14
+REAC:R-HSA-2029480	Fcgamma receptor (FCGR) dependent phagocytosis	0.00364	0.00364	1	BTK,WAS,NCKAP1L,FCGR2A,FCGR1A
+REAC:R-HSA-2029482	Regulation of actin dynamics for phagocytic cup formation	0.00188	0.00188	1	BTK,WAS,NCKAP1L,FCGR2A,FCGR1A
+REAC:R-HSA-198933	Immunoregulatory interactions between a Lymphoid and a non-Lymphoid cell	0.000516	0.000516	1	ITGAL,LILRB1,SIGLEC9,FCGR1A,ITGB2,LAIR1,CD300LF
+REAC:R-HSA-202733	Cell surface interactions at the vascular wall	0.00711	0.00711	1	ITGAL,CD84,CD48,FCER1G,ITGB2
+REAC:R-HSA-202403	TCR signaling	0.00188	0.00188	1	CD4,WAS,LCP2,PTPRC,PTPN22
