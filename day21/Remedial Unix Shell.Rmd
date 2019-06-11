@@ -1,0 +1,45 @@
+---
+title: "Remedial Unix Shell - part 1"
+output:
+  html_document:
+    df_print: paged
+---
+
+## Modularity and the Unix Philosophy
+
+Unix shell provides a way for these programs to talk to each other (pipes) and write to and read files (redirection). Unix's core programs are modular and designed to work well with other programs. The modular approach of the Unix philosophy has many advantages in bioinformatics:
+
+- In a modular workflow, each components is independent, which makes it easier to inspect intermediate results for inconsistencies and isolate problematic steps.
+
+- Modular workflows allow us to experiment with alternative methods and approaches, as separate can be easily swapped out with other components.
+
+- Modular components allow us to choose tools and languages that appropriate for specific tasks.
+
+- Modular programs are reusable and applicanle to many types of data.
+
+## Working with Streams and Redirection
+### Redirecting Standard Out to a File
+
+The Unix shell simplifies tasks like combining large files by leveraging streams. Instead of loading files into memory, we can combine large files by printing their contents to the *standard output* stream and *redirect* this stream from our terminal to the file we wish to save the combined results to.
+
+We can use **cat** to print a file's contents to standard out.
+
+**cat** also allows us to print multiple file's contents to the standard output stream, in the order as they appear to command arguments. This essentially concatenates these files. While these files have been concatenated, the results are not saved anywhere - these lines are just printed to terminal screen. In order to save these concatenated results to a file, you need to **redirect** this standard output stream from your terminal screen to a file.
+
+We use the operators > or >> to redirect standard output to a file. The operator > redirects standard output to a file and overwrites any existing contents of the file, whereas the latter operator >> appends to the file. If there isn't an existing file, both operators will create it before redirecting output to it. To concatenate our two FASTA files, we use **cat** as before, but redirect to the output to a file.
+```{}
+$ cat tb1-protein.fasta tga1-protain.fasta > zea-proteins.fasta
+```
+
+### Redirecting Standard Error
+
+Many programs use the standard output stream for outputting data, a separate stream is needed for errors, warnings, and message meant to be ready by the user. *Standard error* is a stream just for this purpose.
+
+In practice, we often want to redirect the standard error stream to a file so messages, errors, and warnings are logged to a file we can check later.
+
+- To redirect each stream to separate files, we combine the > operator from the previous section with a new operator for redirecting the standard error stream.
+
+### Using Standard Input Redirection
+```{}
+$ program < inputfile > outputfile
+```
