@@ -1,0 +1,63 @@
+---
+title: "The Almighty Unix Pipe: Speed and Beauty in One"
+output: html_notebook
+---
+
+Unix pipes are similar to the redirect operators we saw earlier, except rather than redirecting a program's standard output stream to a file, pipes redirect it to another program's standard input.
+
+### Pipes in Action: Creating Simple Programs with Grep and Pipes
+Suppose we're working with a FASTA file and a program warns that it contains non-nucleotide characters in sequences. We can check for non-nucleotide characters easily with a Unix one-liner using pipes and the **grep**.
+
+The **grep** Unix tool searches files or standard input for strings that match patterns.
+
+```{}
+$ grep -v "^>" tb1.fasta | \   1⃣️
+  grep --color -i "[^ATGC]"    2⃣️
+```
+
+1. ^> matches all lines that start with a > character.
+   -v invert the matching lines because we want to exclude lines starting with >.
+   | (pipe character) pipes the standard output to the next command.
+   \ (backslash character) means that we're continuing the command on the next line.
+
+2. When used in brackets, ^ matches anything that's not one of the characters in these brackets.
+   We ignore case with -i, because a, t, c, and g are valid nucleotides.
+   --color option is used to color the matching non-nucleotide characters.
+   
+### Combining Pipes and Redirection
+When program results are putput via the standard output stream while diagnostic messages, warnings, or erros are output to the standard error stream, we need to combine pipes and redirection to manage all streams from a running program.
+
+Suppose we have two programs: program1 and program2.
+Program1 processes on *input.txt* and ouput results to the standard output stream and diagnostic message to the standard error stream. 
+
+Program2 takes standard output from program1 as input and process it. Program2 also outputs its own diagnostic messages to standard error, and results to standard output.
+The tricky part is that we now have two processes outputting to both standard error and standard output. If we didn't capture both program1's and program2's standard error streams, we'd have a jumbled mess of diagnostic messages on our screen. 
+
+We can combine pipes and redirects easily:
+```{}
+$ program1 input.txt 2> program1.stderr | \ 1⃣️
+     program2 2> program2.stderr > results.txt 2⃣️
+```
+
+1. program1 processes the input.txt input file and then outputs its results to standard output. program1's standard error stream is redirected to the *program1.stderr* logfile.
+
+2. program2 uses the standard output from program1 as its standard input. The shell redirects program2's standard error stream to the *program2.stderr* logfile, and program2's standard output to results.txt.
+
+Occasionally, we need to redirect a standard error stream to standard output. 
+Because pipes only link the standard output of one program to the standard input of the next. Pipes ignore standard error. We can get around this by first redirecting standard error to standard output, and then piping this merged stream to **grep**:
+```{}
+program1 2>&1 | grep "error"
+```
+
+The 2>&1 operator is what redirects standard error to the standard output stream.
+
+### Even More Redirection: A tee in Your Pipe
+Like a plumber's T joint, the Unix program tee diverts a copy of your pipeline's standard output stream to an intermediate file while still passing its standard output:
+```{}
+$ program1 input.txt | tee intermediate-file.txt | program2 > results.txt
+```
+
+Here, program1's standard output is both written to *intermediate-file.txt* and piped directly into program2's standard input.
+
+
+
