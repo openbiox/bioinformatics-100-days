@@ -1,0 +1,57 @@
+---
+title: "Managing and Interacting with Processes"
+output: html_notebook
+---
+
+When we run programs through the Unix shell, they become *processes* until they successfully finish or terminate with an error. 
+
+### Backgroud Processes
+We can tell the Unix shell to run a program in the background by appending an ampersand(&) to the end of our command.
+```{}
+$ program1 input.txt > results.txt &
+```
+
+We can check what processes we have running in the background with **jobs**:
+```{}
+jobs
+[1]+ Running     program1 input.txt > results.txt
+```
+
+To bring a backgound process into the foreground again, we can use **fg** (for foreground). **fg** will bring the most recent process to the foreground.
+
+To place a process already running in the foreground into the background, we first need to *suspend* the process, and then use the **bg** command to run it in the background.
+We can suspend processes by sending a stop signal through the key combination Control-z.
+```{}
+$ program1 input.txt > results.txt  # forgot to append ampersand
+$ # enter control-z
+[1]+ Stopped                   program1 input.txt > results.txt
+$ bg
+[1]+ program1 input.txt > results.txt
+```
+
+### Killing Processes
+If the process is currently running in your shell, you can kill it by entering Control-C. This only works if this process is running in the foreground, so if it's in the background you'll have to use the fg discussed earlier.
+
+### Exit Status: How to Programmatically Tell Whether Your Command Worked
+Unix programs exit with an *exit status*, which indicates whether a program terminated without a problem or with an error.
+
+By Unix standards, an exit status of 0 indicates the process ran successfully, and any nonzero status indicates some sort of error has occurred.
+```{}
+$ program1 input.txt > results.txt
+$ echo $?
+0
+```
+
+Exit statuses allow us to programmatically chain commands together in the shell.
+- &&: one operator that runs the subsequent command only if the first command completed successfully
+- ||: one operator that runs the subsequent command only if the first command completed unsuccessfully
+```{}
+$ program1 input.txt > intermediate-results.txt && \
+    program2 intermediate-results.txt > results.txt
+```
+
+```{}
+$ program1 input.txt > intermediate-results.txt || \
+    echo "warning: an error occurred"
+```
+
