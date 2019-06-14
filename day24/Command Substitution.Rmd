@@ -1,0 +1,35 @@
+---
+title: "Command Substitution"
+output: html_notebook
+---
+Command substitution runs a Unix command inline and returns the output as a string that can be used in another command.
+
+### Example:
+```{}
+$ grep -c '^>' input.fasta  1⃣️
+$ echo "There are $(grep -c '^>' input.fasta) entries in my FASTA file."  2⃣️
+```
+
+1. This command uses **grep** to count (the -c option stands for count) the number of lines matching the pattern. 
+   In this case, pur pattern ^> matches FASTA header lines.
+   
+2. Take the output of the **grep** command and insert it into another command.
+
+We can easily dated directories using the command data +%F, where the argument +%F simply tells the date program to output the date in a particular format.
+```{}
+$ mkdir results-$(date +%F)
+$ ls results-2015-04-13
+```
+
+### Storing Your Unix Tricks
+**alias** can be used to store repeated command combinations, it aliases your command to a shorter name alias.
+For example, if you always create project directories with the same directory structure, add a line like this:
+```{}
+alias mkpr="mkdir -p {data/seqs,scripts,analysis}"
+```
+
+Another example is that we could alias our date +%F command to today:
+```{}
+alias today="date +%F"
+```
+Entering mkdir results-$(today) will create a dated results directory.
