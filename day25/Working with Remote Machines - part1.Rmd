@@ -1,0 +1,42 @@
+---
+title: "Working with Remote Machines - part1"
+output: html_notebook
+---
+
+## Connecting to Remote Machines with SSH
+```{}
+$ ssh biocluster.myuniversity.edu
+Password: 1⃣️
+wsobchak@biocluster.myuniversity.edu$ 2⃣️
+```
+
+1. When connecting to a remote host with SSH, you'll be prompted for your remote user account's password.
+
+2. You're granted a shell prompt on the remote host. This allow you to execute commands on the remote host just as you'd execute them locally.
+
+SSH also works with IP address.
+
+### Storing Your Frequent SSH Hosts
+Create and edit the file at **~/.ssh/config**. Each entry takes the following form:
+Host bio_serv
+     HostName 192.168.237.52
+     User cdarwin
+     Port 50453
+     
+With this file saved, you can SSH into 192.168.236.42 using the alias ssh bio_serv rather than typing out ssh -p 50543 cdarwin\@192.169.237.42.
+
+If you're working with many remote machine connections in many terminal tabs, you can always access the hostname with the command *hostname*:
+```{}
+$ hostname
+```
+
+If you maintain multiple accounts on a server, it can be useful to check which account you're using.
+```{}
+$ whoami
+```
+
+## Quick Authentication with SSH keys
+Use SSH keys to log in into remote machines without passwords, we first need to generate a public/private key pair. 
+```{}
+ssh-keygem -b 2048
+```
