@@ -1,0 +1,48 @@
+---
+title: "Working with Remote Machines - part2"
+output: html_notebook
+---
+
+## Maintaining Long-Running Jobs with nohup and tmux
+### nohup
+nohup is simple command that executes a command and catches hangup signals sent from the terminal. Because the nohup command is catching and ignoring these hangup signals, the program you're running won't be interrupted.
+
+```{}
+$ nohup peogram1 > output.txt &    *1
+[1] 10900  *2
+```
+1. By adding nohup this program will not be interrupted if your terminal were to close or the remote connection were to drop.
+
+2. nohup returns the process ID number, which is how you can monitor or terminate this process if you need to.
+
+## Working with Remote Machines Through Tmux
+
+Tmux allow you to create a session containing multiple windows, each capable of running their own processes.
+
+### Installing and Configuring Tmux
+OS X: Homebrew
+Ubuntu: apt-get
+
+download the .tmux.conf file to home directory
+
+### Creating, Detaching, and Attaching Tmux Sessions
+```{}
+$ tmux new-session -s maize-snps
+```
+-s: give name to session
+
+Detach: Control-a, followed by *d*
+
+Attach: $ tmux attach
+
+### Working with Tmux Windows
+------------
+Key sequence | Action
+-------------| ------
+Control-a d  | Detach
+Control-a c  | Create new window
+Control-a n  | Go to next window
+Control-a p  | Go to previous window
+Control-a &  | Kill current window
+Control-a ,  | Rename current window
+Control-a ?  | List all key sequences
