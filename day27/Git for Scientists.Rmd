@@ -1,0 +1,20 @@
+---
+title: "Git for Scientists - part1"
+output: html_notebook
+---
+## Git allows you to keep snapshots of your project
+
+With version control systems, you create snapshots of your current project at specific points in its development.
+Git commits allow you to easily reproduce and rollback to past versions of analysis. 
+Instead of redoing months of work to find a bug, Git can give you line-by-line code differences across versions.
+
+## Git helps you kepp track of important changes to code
+Most software changes over time as new features are added or bugs are fixed. It is important in Scientific computing to follow the development of software we use, as a fixed bug could mean the difference between correct and incorrect results in our own work.
+With Git, it's easy to both track software changes and download new software versions.
+
+## Git helps keep software organized and available after people leave
+Git helps maintain both continuity in work and a full record of a project’s history. Centralizing an entire project into a repository keeps it organized. Git stores every committed change, so the entire history of a project is available even if the main developer leaves and isn’t around for questions.
+
+## Installing Git 
+OS X: brew install git
+Linux: apt-get
