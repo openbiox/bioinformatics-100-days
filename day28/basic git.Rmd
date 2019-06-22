@@ -1,0 +1,66 @@
+---
+title: "Basic Git"
+output: html_notebook
+---
+
+## Installing Git
+OS X: brew install git
+Linux: apt-get install git
+
+## Basic Git: Creating repositories, tracking files, and staging and committing changes
+### Git setup: telling git who you are
+```{}
+$ git config --global user.name "Sewall Wright"
+$ git config --global user.email "swright@adaptivelandscape.org"
+```
+
+We interact with Git through *subcommands*, which are in the format git <subcommand>.
+
+Many of Git's subcommands use terminal colors to visually indicate changes. We can enable this with:
+```{}
+$ git config --global color.ui true
+```
+
+### git init and git clone: creating repositories
+repository: a directory that's under version control.
+
+two ways to create a repository:
+1. initializing one from an existing directory
+
+change into zmays-snps/ directory and use the Git subcommand **git init**:
+```{}
+$ git init
+```
+
+2. create a repository through cloning an existing repository
+```{}
+$ git clone git://github.com/lh3/seqtk.git
+```
+
+### Tracking files in Git: git add and git status Part I
+You need to tell Git which files to *track* using the subcommand git add.
+
+Before tracking a file, let's use the command git status to check Git's status of the files in our repository:
+```{}
+$ git status
+```
+
+Let's use git add to tell Git to track the README and data/README files in our directory:
+```{}
+$ git add README data/README
+```
+
+### Staging file in Git: git add and git status Part II
+A file that's tracked means Git knows about it.
+A stage file is not only tracked, but its latest changes are staged to be included in the next commit.
+
+Two roles of git add:
+- ALtering Git to start tracking untracked files.
+- Staging changes made to an already tracked file. 
+
+### git commit: taking a snapshot of your project
+```{}
+$ git commit -m "initial import"
+```
+
+This command commits your staged changes to your repository with the commit message "initial import".
