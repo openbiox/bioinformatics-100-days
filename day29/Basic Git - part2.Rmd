@@ -1,0 +1,79 @@
+---
+title: "Basic Git - part2"
+output: html_notebook
+---
+## Seeing file difference: git diff
+
+Without any arguments, git diff shows you the difference between the files in your working directory and what's been staged. If none of your changes have been staged, git diff shows us the difference between your last commit and the current versions of your files.
+If I add a line to README.md and run git diff:
+```{}
+$ echo "20190623" >> README
+$ git diff
+diff --git a/day14/gprofile_cluster_1_enr_results.txt b/day14/gprofile_cluster_1_enr_results.txt
+index eb666c1..f2975c1 100644
+--- a/day14/gprofile_cluster_1_enr_results.txt             
++++ b/day14/gprofile_cluster_1_enr_results.txt
+@@ -1,64 +1,9770 @@                               
+-Name   Description     pvalue  qvalue  phenotype       genes
+-GO:0002221     pattern recognition receptor signaling pathway  6.68e-05        6.68e-05        1       BTK,CD180,PTPN22,HAVCR2,ITGB2,CD14,CD300LF
+-GO:0002224     toll-like receptor signaling pathway    1.38e-05        1.38e-05        1       BTK,CD180,PTPN22,HAVCR2,ITGB2,CD14,CD300LF
+-GO:0030168     platelet activation     0.0018  0.0018  1       LCP2,PIK3CG,PLEK,PIK3R5,FCER1G
+-GO:0050852     T cell receptor signaling pathway       0.000808        0.000808        1       CD4,WAS,LCP2,PTPRC,PTPN22
+-GO:0097529     myeloid leukocyte migration     0.00051 0.00051 1       PIK3CG,NCKAP1L,FCER1G,ITGB2,C3AR1,AIF1
+-GO:0097530     granulocyte migration   0.000808        0.000808        1       PIK3CG,NCKAP1L,FCER1G,ITGB2,C3AR1
+-GO:1990266     neutrophil migration    0.000435        0.000435        1       PIK3CG,NCKAP1L,FCER1G,ITGB2,C3AR1
+-GO:0071621     granulocyte chemotaxis  0.000496        0.000496        1       PIK3CG,NCKAP1L,FCER1G,ITGB2,C3AR1
+-GO:0030593     neutrophil chemotaxis   0.000285        0.000285        1      
+```
+
+line 14, 15: theare are two versions of the README file we are comparing, a and b. --- indicates the original file (the one from our last commit). +++ indicates the changed version.
+
+line 16: This denots the start of a changed hunk, and indicated whick line the changes start on, and how long they are.
+
+If we wanted to compare what's been staged to our last commit, we can use git diff --staged. 
+
+## Seeing your commit history: git log
+Commits are like chains, with each commit pointing to its parent.
+
+We can use git log to visualize our chain of commits.
+
+```{}
+$ git log
+commit ade5ba1cc7821fb39b8bc9cf3a1f334d082a6bff (HEAD -> master, origin/master, origin/HEAD)
+Author: dandanpeng <pddAAAA@gmail.com>
+Date:   Sun Jun 23 08:31:02 2019 +0200
+
+    add readme
+
+commit 7a46a565fbfdcfb08b5bbb7f96d394718f2e89ef
+Author: dandanpeng <pddAAAA@gmail.com>
+Date:   Sun Jun 23 00:14:40 2019 +0200
+
+    initial commit
+
+commit d5445ce380869f6f7d608c139319fb05b2fed027
+Author: dandanpeng <pddAAAA@gmail.com>
+Date:   Tue Jun 18 14:07:32 2019 +0800
+
+    initial commit
+
+commit dd1a6b27110da086d1820919d94e7f1f7fd9ca7a
+Author: dandanpeng <pddAAAA@gmail.com>
+Date:   Tue Jun 18 11:05:58 2019 +0800
+
+    add readme
+```
+
+line 42, 48, 54 and 60 are SHA-1 checksum.
+Each commit will have one of these, and they will depend on your repository's past commit history and the current files.
+
+## Moving and Removing files: git mv and git rm
+To move or remove tracked files in Git, we need to use Git's version of mv and rm: git mv and git rm.
+
+change extension of README file:
+```{}
+$ git mv README README.md
+$ git mv data/README data/README.md
+```
+
+Like all changes, this isn't stored in your repository until you commit it.
