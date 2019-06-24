@@ -1,0 +1,35 @@
+---
+title: "Basic Git - part3"
+output:
+  html_document:
+    df_print: paged
+---
+
+Many of the items in the untracked list may be files we never want to commit. Sequencing data files are a great example: they are usually much too large to include in a repository.
+If we were to commit these large files, collaborators cloing your repository would have to download these enormous data files.
+
+Suppose we wanted to ignore all FASTQ files in the *data/seqs/* directory. 
+1. create and edit the file *.gitignore * in your *zmays-snps/* repository directory, and add: 
+data/seqs/*.fastq
+2. coomit *.gitignore* file
+
+Some guildelines about what should we tell *.gitignore* to ignore.
+- Large files
+- Intermediate files
+  - For example, if you align reads to a genome, this will create SAM or BAM files. 
+- Text editor temporary files
+- Temporary code files
+
+We can use a *global.gitignore* file to universally ignore a file across all of our proejcts.
+
+Create a global *.gitignore* file in *~/.gitignore_global* and then configure Git to use this with the following:
+```{}
+git config --global core.excludesfile ~/.gitignore_global
+```
+
+A repository should store everything required to replicate a project except a large datasets and external programs. This includes all scripts, documentation, analysis, and possibly even a final manuscript.
+
+## Undoing a Stage: git reset
+
+One nice feature of Git is that you don't have to include messy changes in commit -- just don't stage these files.If you accidentally stage a messy file for a commit with git add, you can unstage it with git reset.
+
