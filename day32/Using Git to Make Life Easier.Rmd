@@ -1,0 +1,47 @@
+---
+title: "Using Git to Make Life Easier"
+output: html_notebook
+---
+
+## Getting Files from the Past: git checkout
+
+Suppose you accidentally overwrite your current version of README.md by using > instead of >>. We can restore this file by checking out the version in our last commit with the command git checkout -- <file>. You don't need to remember this command, as it's included in git status messages. 
+
+But restoring a file this way erases all changes made to that file since the last commit. The -- indicates to Git that you're checking out a file, not a branch (git checkout is also used to check out branches; commands with multiple uses are common in Git).
+
+By default, git checkout restores the file version from HEAD. If we want to restore the version of README.md one commit before HEAD. We can use git log to see history. And restore it with SHA-1 IDs added. 
+```{}
+git checkout 08ccd3b -- README.md
+```
+
+## Stashing Your Changes: git stash
+
+Git subcommand 'git stash' saves any working changes you've made since the last commit and restores your repository to the version at HEAD.
+You can then reapply these saved changes later.
+
+Note that the changes with 'git stash' are not committed; 'git stash' is a separate way to store changes outside of your commit history.
+
+## More git diff: Comparing Commits and Files
+
+Earlier, we used git diff to look at the difference between our working directory and our staging area. Here we will look at how we can use 'git diff' to compare our current working tree to other commits.
+
+One use for 'git diff' is to compare the difference between two arbitrary commits. For example, if we wanted to compare what we have now (at HEAD) to commit dafce75:
+```{}
+git diff dafce75
+```
+
+We can also view all changes made to a file between two commit using 'git diff'. To do this, specify both commits and the file's path as arguments (e.g., git diff <commit> <commit> <path>). For example, to compare our version of README.md across commits 269aa09 and 46f0781, we could use either:
+```{}
+git diff 46f0781 269aa09 README.md
+```
+or
+```{}
+git diff HEAD~3 HEAD~2 
+```
+
+This second command utilized the relative ancestry references.
+
+## Undoing and Editing Commits: git commit --amend
+
+'git commit --amend' opens up your last commit message in your default text editor, allowing you to edit it. 
+Amending commits isn't limited to just changing the commit message though. You can make changes to your file, stage them, and then amend these staged changes with 'git commit --amend'. In general, unless you've made a mistake, it's best to just use separate commits.
