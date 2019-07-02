@@ -1,0 +1,42 @@
+---
+title: "Working with Braches - part 1 "
+output: html_notebook
+---
+
+ ## Creating and working with braches: git branch and git checkout
+ 
+ To create a Git brach, we use git brach <brachname>. When called without any arguments, git branch lists all branches.
+ ```{}
+ $ git brach readme-changes
+ $ git brach
+ * master
+   readme-changes
+ ```
+ 
+ The asterisk next to master is there to indicate that this is the branch we're currently on.
+ To switch to the readme-changes branch, use git checkout readme-changes:
+ ```{}
+ $ git checkout readme-changes
+ Switched to branch 'readme-changes'
+ $ git branch
+   master
+ * readme-changes
+ ```
+ 
+ Now we are in readme-changes branch. Suppose we edit our README.md extensively, if we commit these changes, our commit is added to the   readme-changes branch. 
+ Back on the master branch, suppose we add the adapters.fa file, and commit this change.Both branches will have new comits.
+ 
+ ## Merging Braches: git merge
+ 
+ First, use git checkout to switch to the branch we want to merge the other branch into.
+ Then, use git merge <otherbranch> to merge the other branch into the current branch.
+ 
+ 
+ ## Branches and Remotes
+ 
+ Remote branches are a special type of local branch.
+ In fact, you've already interacted with these remote branches when you've pushed to and pulled from remote repositories.
+ Using git branch with the option --all, we can see these hidded remote branches.
+ Remote branches can be synchronized with the latest commits from the remote repository using git fetch.
+ A git pull is nothing more than a git fetch followed by a git merge.
+ 
