@@ -1,0 +1,39 @@
+---
+title: "Retrieving Bioinformatics Data"
+output: html_notebook
+---
+
+## Downloading data with wget and curl
+
+### wget
+
+wget is useful for quickly downloading a file from the command line. 
+
+One of wget's strengths is that it can download data *recursively*. 
+When run with the recursive option (--recursive or -r), wget will also follow and download the pages linked to, and even follow and download links on these pages, and so forth.
+
+### Curl
+
+curl serves a slightly different purpose than wget. 
+wget is great for downloading files via HTTP or FTP and scraping data from a web page using its recursive option. 
+curl behaves similarly, although by default writes the file to standard output. 
+
+If you prefer not to redirect curl's output, use -O <filename> to write the results to <filename>. If you omit the filename argument, curl will use same filename as the remote host.
+
+curl has the advantages than it can transfer files using more protocols than wget, including SFTP (secure FTP) and SCP (secure copy). 
+One especially nice feature of curl is that is can follow page redirects if the -L/--location option is enabled. With this enabled, curl will download the ultimate page the link redirects to, not the redirect page itself.
+Finally, Curl itself is also a library, meaning in addition to the command-line curl program, Curl's functionality is wrapped by software libraries like RCurl and pycurl.
+
+## Rsync and Secure Copy (scp)
+
+Suppose a colleague needs all large sequencing datasets in your project directory that are ignored by Git (e.g.,in your *.gitignore*). A better tool for synchronizing these entire directories across a network is Rsync.
+
+- Rsync is often faster because it only sends the difference between file versions (when a copy already exists or partially exists) and it can compress file during transfers. 
+- Rsync has an archive option that preserves links, modification timestamps, permission, ownership, and other file attributes. 
+
+rsync's basic syntax is rsync source destination, where source is the source of the files or directories you'd like to copy, and destination is the destination you'd like to copy these files to.
+
+Because rsync only transmits files if they don't exist or they've changed, you can (and should) run rsync again after your files have transferred. 
+
+Occasionally, we just need to quickly copy a single file over SSH - for tasks where Unix's cp would be sufficient, but need to work over an SSH connection. rsync would work, but it's a bit overkill.
+Secure copy (scp) is perfect for this purpose. Secure copy workd just like cp, except we need to specify both host and path (using the same user@host:/path/to/file notation as wget).
