@@ -1,0 +1,56 @@
+---
+title: "Data Integrity"
+output: html_notebook
+---
+
+Checksums are very compressed summaries of data, computed in a way that even if one bit of the data is changed, the checksum will be different.
+Checksum also facilitate reproducibility, as we can link a particular analysis and set of results to an exact version of data summarized by the data's checksum value.
+
+## SHA and MD5 Checksums
+
+The two most common checksum algorithm for ensuring data integrity are MD5 and SHA-1.
+SHA-1 is what Git uses for its commit IDs.
+MD5 is an older checksum algorithm, but one that is still commonly used.
+
+### SHA-1
+
+We can pass arbitrary strings to the program **shasum**(on some systems, it's sha1sum) through standard in:
+```{}
+$ echo "bioinformatics is fun" | shasum
+f9b70d0d1b0a55263f1b012adab6abf572e3030b 
+```
+
+The long string of numbers and letters is the SHA-1 checksum. Checksums are reported in hexadecimal format, where each digit can be one of 16 characters: digits 0 through 9, and the letters a, b, c, d, e, and f. The trailing dash indicate this is the SHA-1 checksum of input from standard in.
+
+We can also use checksums with file input.
+```{}
+$ shasum Csyrichta_TAGGACT_L008_R1_001.fastq fea7d7a582cdfb64915d486ca39da9ebf7ef1d83 Csyrichta_TAGGACT_L008_R1_001.fastq
+```
+
+The program shasum can create and validate against a file containing the checksums of files.
+We can create a SHA-1 checksum file for all FASTQ files in the *data/* directory as follows:
+```{}
+$shasum data/*fastq > fastq_checksums.sha
+$ cat fastq_checksums.sha
+```
+
+Then, we can use shasum's check option (-c) to validate that these files match the original versions:
+```
+$ shasum -c fastq_checksum.sha
+```
+
+### MD5
+
+The program md5sum (or md5 on OS X) calculates MD5 hashes and is similar in operation to shasum. However, note that on OS X, the md5 command doesn't have the -c option, so you'll need to install the GNU version for this option.
+
+## Looking at Difference Between Data
+
+One approash to check how files differ is to compute the diff between two files using the Unix tool diff.
+Unix's diff works line by line, and outputs blocks(called hunks) that differ between files.
+
+Example command:
+```{}
+$ diff -u gene-1.bed gene-2.bed
+```
+
+The option -u tells diff to output in unified diff format, which is a format nearly identical to the one used by git diff.
