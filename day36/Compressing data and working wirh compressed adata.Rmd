@@ -1,0 +1,57 @@
+---
+title: "Compressing Data and Working with Compressed Data"
+output: html_notebook
+---
+
+Most well-written bioinformatics tools can work natively with compressed data as input, without requiring us to decompress it to disk first.
+Using pipes and redirection, we can stream compressed data and write compressed files directly to the disk.
+Additionally, common Unix tools like cat, grep, and less all have variants that work with compressed data, and Python's gzip module allow us to read and write compressed data from within Python.
+
+## gzip 
+
+The two most common compression system used on Unix are gzip and bzip2.
+gzip compresses and decompresses data faster than bzip2, but bzip2 has a higher compression ratio.
+Generally, gzip is used in bioinformatics to compress most sizable files, while bzip2 is more common for long-term data archiving.
+
+The command-line tool gzip allows you to compress files in a few different ways.
+First, gzip can compress results from standard input.
+Suppose we have a program that removes low-quality bases from FASTQ files called trimmer. Our trimmer program can handle gzipped input files natively, but writes uncompressed trimmed FASTQ results to standard output. Using gzip, we can compress trimmer's output in place, before writing to the disk:
+```{}
+$ trimmer in.fastq.gz | gzip > out.fastq.gz
+```
+
+gzip takes input from standard in, compress it, and writes this compressed output to standard out.
+
+gzip also can compress files on disk in place. If our in.fastq.gz file weren't compressed, we could compress it as follows:
+```{}
+$ gzip in.fastq
+```
+
+gzip will compress this file in place, replacing the original uncompressed version with the compressed file. Similarly, we can decompress files in place with the command gunzip:
+```{}
+$ gunzip in.fastq.gz
+```
+
+Note that this replace our in.fastq.gz file with the decompressed version.
+Both gzip and gunzip can also output their results to standard out.
+This can be enabled using the -c option:
+```{}
+$ gzip -c in.fastq > in.fastq.gz
+$ gunzip -c in.fastq.gz > duplicate_in.fastq
+```
+
+A nice feature of the gzip compression algorithm is that you can concatenate gzip compressed output directly to an existing gzip file.
+If we wanted to compress the in2.fastq file and append it to our compressed in.fastq.gz file, we wouldn't have to decompress in.fastq.gz first, concatenate the two files, and then compress the concatenated file.
+```{}
+$ gzip -c in2.fastq >> in.fastq.gz
+```
+
+Importantly, note that the redirection operator we use is >>; had we used >, we would overwrite our compressed version of in2.fastq to in.fastq.gz(rather than append to it).
+
+## Working with Gzipped Compressed Files
+
+Perhaps the greatest advantage of gzip is that many common Unix and bioinformatics tools can work directly with compressed file.
+We can search compressed files using grep's analog for gzipped files, zgrep.
+Likewise, cat has zcat (on some systems like OS X, this is gzcat), diff has zdiff, and less has zless.
+These programs that handle compressed input behave exactly like their standard couterpart.
+
