@@ -1,0 +1,65 @@
+---
+title: "Inspecting and Manipulating Text Data with Unix Tools - part 1"
+output: h tml_notebook
+---
+
+In this chapter, we'll work with very simple genomic feature formats: BED (three column) and GTF files.
+These file formats store the position of features such as genes, exons, and variants in tab-delimited format.
+
+## Inspecting Data with Head and Tail
+
+Take a look at the top of a file with head.
+```{}
+$ head Mus_musculus.GRCm38.75_chr1.bed
+```
+
+We can also control how many lines we see with head through the -n argument:
+```{}
+$ head -n 3 Mus_musculus.GRCm38.75_chr1.bed
+```
+
+head has a relared command designed to look at the end, or tail of a file. tail works just like head:
+```{}
+$ tail -n 3 Mus_musculus.GRCm38.75_chr1.bed
+```
+
+We can also use tail to remove the header of a file. Normally the -n argument specifies how many of the last lines of a file to include, but if -n is given a number x preceded with a + sign, tail will start from the x^th line. So to chop off a header, we start from the second line with -n +2. Here, we'll use the command seq to generate a file of 3 numbers, and chop of the first line:
+```{}
+$ seq 3 > nums.txt
+$ cat nums.txt
+1
+2
+3
+$ tail -n +2 nums.txt
+2
+3
+```
+
+Sometimes it's useful to see both the beginning and end of a file - for example, if we have a sorted BED file and we want to see the positions of the first feature and last feature. We can do this with a trick:
+```{}
+# (head -n 2; tail -n 2) < Mus_musculus.GRCm38.75_chr1.bed
+```
+
+head is also useful for taking a peek at data resulting from a Unix pipeline.
+```{}
+ $ grep 'gene_id "ENSMUSG00000025907"' Mus_musculus.GRCm38.75_chr1.gtf | head -n 1
+```
+
+## less
+
+less is a terminal pager, a program that allows us to view large amounts of text in our terminals.
+
+Normally, if we cat a long file to screen, the text flashed by in an instant - less allows us to view and scroll through long files and standard output a screen at a time.
+
+less runs more like an application than a command: once we start less, it will stay open until we quit it. 
+
+One of the most useful features of less is that it allows you to search text and highlights matcher. 
+
+less is also extremely usedul in debugging our command-line pipelines.
+Just pipe the output of the command you want to debug to less and delete everything after. When you run the pipe, less will capture the output of the last command and pause so you can inspect it.
+```{}
+$ step1 input.txt | less # inspect output in less 
+$ step1 input.txt | step2 | less
+$ step1 input.txt | step2 | step3 | less
+```
+
