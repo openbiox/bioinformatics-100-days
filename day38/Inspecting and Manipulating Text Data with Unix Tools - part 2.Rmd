@@ -1,0 +1,56 @@
+---
+title: "Inspecting and Manipulating Text Data with Unix Tools - part 2"
+output: html_notebook
+---
+
+## Plain-Text Data Summary Information with wc, ls, and awk
+
+wc: ouput the number of words, lines, and characters of the supplied file
+```{}
+$ wc Mus_musculus.GRCm38.75_chr1.bed
+  81226 243678 1698545 Mus_musculus.GRCm38.75_chr1.bed
+```
+
+We can use option -l to just return the number of lines:
+```{}
+$ wc -l Mus_musculus.GRCm38.75_chr1.bed
+```
+
+The easiest way to know a file's size is using ls with the -l option:
+```{}
+$ ls -l Mus_musculus.GRCm38.75_chr1.bed
+-rw-r--r-- 1 vinceb staff 1698545 Jul 14 22:40 Mus_musculus.GRCm38.75_chr1.bed
+```
+
+ls -l reports file sized in bytes. If we wish to use human-readable sizes, we can use ls -lh:
+```{}
+$ ls -lh Mus_musculus.GRCm38.75_chr1.bed
+-rw-r--r-- 1 vinceb staff 1.6M Jul 14 22:40 Mus_musculus.GRCm38.75_chr1.bed
+```
+
+awk can return how many fileds a file contains:
+```{}
+$ awk -F "\t" '{print NF; exit}' Mus_musculus.GRCm38.75_chr1.bed 
+3
+```
+
+By default, awk treats white-space (tabs and spaces) as the filed separator, but we could change this to just tabs by setting the -F argument of awk.
+
+Some GTF files have a series of comments before it: five lines that begin with hash symbols (#) that contain helpful metadata like the genome build, version, date and accession number.
+Because the first line is a comment, our awk won't work, it will return the number of columns of the first comment.
+We need to first chop off the comments and then pass the results to our awk one-liner.
+```{}
+$ tail -n +5 Mus_musculus.GRCm38.75_chr1.gtf | head -n 1
+#!genebuild-last-updated 2013-09
+$ tail -n +6 Mus_musculus.GRCm38.75_chr1.gtf | head
+1 pseudogene gene 3054233 3054733 . + . [...]
+
+$ tail -n +6 Mus_musculus.GRCm38.75_chr1.gtf | awk -F "\t" '{print NF; exit}' 16
+```
+
+The weakness with using tail -n +6 to drop commented header lines from a file is that this solution must be tailored to specific files.
+Using the program grep, we can easily exclude lines that begin with "#":
+```{}
+$ grep -v "^#" Mus_musculus.GRCm38.75_chr1.gtf | head -n 3
+1 pseudogene gene 3054233 3054733 . + . [...] 1 unprocessed_pseudogene transcript 3054233 3054733 . + . [...] 1 unprocessed_pseudogene exon 3054233 3054733 . + . [...]
+```
