@@ -1,0 +1,39 @@
+---
+title: "Inspecting and Manipulating Text Data with Unix Tools - part 3"
+output: html_notebook
+---
+
+## Working with Column Data with cut and Columns
+
+cut: cuts out secified columns (also known as fields) from a text file
+
+By default, cut treats tabs as the delimiters, so to extract the second column we use:
+```{}
+$ cut -f 2 Mus_musculus.GRCm38.75_chr1.bed | head -n 3
+```
+
+The -f argument is how we specify which columns to keep.
+It also allows us to specify ranges of columns (also known as fields) and sets of columns.
+E.g., -f 3-5
+      -f 3, 5, 8
+Note that it's not possible to reorder columns using cut.
+
+cut also allows us to specify the column delimiter character. 
+If we were to come across a CSV file containing chromosome names, start positions, and end positions, we could select columns from it, too:
+```{}
+$ cut -d, -f2,3 Mus_musculus.GRCm38.75_chr1_bed.csv
+```
+
+## Formatting Tabular Data with column
+
+Program column -t produces neat columns that are much easier to read. 
+The -t option tells column to treat data as a table.
+
+Note that you should only use column -t to visualize data in the terminal, not to reformat data to write to a file. 
+
+Like cut, column's default delimiter is the tab character (\t). We can specify a different delimiter with the -s option. 
+If we wanted to visualize the columns of the Mus_musculus.GRCm38.75_chr1_bed.csv file more easily, we could use:
+```{}
+$ column -s"," -t Mus_musculus.GRCm38.75_chr1_bed.csv
+```
+
