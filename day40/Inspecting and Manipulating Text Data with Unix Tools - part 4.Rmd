@@ -1,0 +1,89 @@
+---
+title: "Inspecting and Manipulating Text Data with Unix Tools - part 4"
+output: html_notebook
+---
+
+- The All-Powerful Grep
+
+If you need to find a pattern (fixed string or regular expression) in a file, grep will be faster than anything you could write in Python.
+
+grep requires two arguments: the pattern (the string or basic regular expression you want to search for), and the file (or files) to search for it in.
+
+Use grep to find a gene, "Olfr418-ps1,” in the file Mus_muscu‐ lus.GRCm38.75_chr1_genes.txt:
+```{}
+$ grep "Olfr418-ps1" Mus_musculus.GRCm38.75_chr1_genes.txt
+```
+
+The quotes around the pattern aren't requires, but it's safest to use quotes so our shells won't try to interpret any symbols. 
+grep returns any lines that match the pattern, even ones that only partially match.
+
+One useful option when using grep is --color=auto. This option enables terminal colors, so the matching part of the pattern is colored in your terminal.
+
+grep can be used to only return lines that do not match the specified pattern.
+The option we used was -v, for invert.
+For example, you want a list of all genes that contain "Olfr", except "Olfr1413". Using -v and chaining together to calls a grep with pipes, we could use:
+```{}
+$ grep Olfr Mus_musculus.GRCm38.75_chr1_genes.txt | grep -v Olfr1413
+```
+
+But partially matching may bite us here, this command would also exlude genes like "Olfr1413a" and "Olfr14130".
+But we can get around this by using -w, which matches entire words (surrounded by whitespace).
+```{}
+$ cat example.txt
+bio
+bioinfo
+bioinformatics
+computational biology
+$ grep -v bioinfo example.txt bio
+computational biology
+$ grep -v -w bioinfo example.txt
+bio
+bioinformatics
+computational biology
+```
+
+grep's default output often doesn't give us enough context of a match we need to inspect results by eye; only the matching line is printed to standard output.
+There are three useful options to get around this context before (-B),
+context: after (-A),
+and context before and after (-C).
+Each of these takes how many lines of context to provide.
+
+grep also supports a flavor of regular expression called POSIX Basic Regular Expressions (BRE).
+For example, if we wanted to find the Ensembl gene identifiers for both "Olfr1413" and "Olfr1411", we could use:
+```{}
+$ grep "Olfr141[13]" Mus_musculus.GRCm38.75_chr1_genes.txt 
+ENSMUSG00000058904 Olfr1413
+ENSMUSG00000062497 Olfr1411
+```
+
+However, this approach is less useful if we have more divergent patterns to search for.
+For example, constructing a BRE pattern to match both "Olfr218" and "Olfr1416" would be complex and error prone.
+For tasks like these, it's far easier to use grep's support for POSIX Extended Regular Expressions (ERE).
+EREs allow us to use alternation (regular expression jargon for matching one of several possible patterns) to match either "Olfr218" or "Olfr1416".
+The syntax uses a pipe symbol (|):
+```{}
+$ grep -E "(Olfr1413|Olfr1411)" Mus_musculus.GRCm38.75_chr1_genes.txt 
+ENSMUSG00000058904 Olfr1413
+ENSMUSG00000062497 Olfr1411
+```
+
+grep has an option to count how many lines match a pattern: -c.
+For example, suppose we wanted a quick look at how many genes start with "Olfr":
+```{}
+$ grep -c "\tOlfr" Mus_musculus.GRCm38.75_chr1_genes.txt 27
+```
+
+Note that if your pattern includes the double-quote characters, you should use single quotes to specify your pattern.
+
+Sometimes, it's useful to use grep tp extract only the matching part of the pattern. We can do this with -o:
+```{}
+$ grep -o "Olfr.*" Mus_musculus.GRCm38.75_chr1_genes.txt | head -n 3 Olfr1416
+Olfr1415
+Olfr1414
+```
+
+Or, suppose we wanted to extract all values of the "gene_id" filed from the last column of our Mus_musculus.GRCm38.75_chr1.gtf gile. This is easy with -o:
+```{}
+$ grep -E -o 'gene_id "\w+"' Mus_musculus.GRCm38.75_chr1.gtf
+```
+
