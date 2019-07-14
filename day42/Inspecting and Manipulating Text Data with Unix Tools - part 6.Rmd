@@ -1,0 +1,63 @@
+---
+title: "Inspecting and Manipulating Text Data with Unix Tools - part 6"
+output: html_notebook
+---
+
+## Finding Unique Values in Uniq
+
+Unix's uniq takes lines from a file or standard input stream, and outputs all lines with consecutive duplicates removed.
+
+```{}
+$ cat letters.txt A
+A
+B
+C
+B
+C
+C
+C
+$ uniq letters.txt 
+A
+B 
+C 
+B 
+C
+```
+
+If we want to find all unique lines in a file, we would first sort all lines using sort so that all identical lines are grouped next to each other, and then run uniq. 
+```{}
+$ sort letters.txt | uniq 
+A
+B
+C
+```
+
+If we had lowercase letters mixed in this file as well, we could add the option -i to uniq to be case insensitive.
+
+Option -c shows the counts of occurrences next to the unique lines.
+```{}
+$ uniq -c letters.txt 
+2 A
+1 B 
+1 C 
+1 B 
+3 C
+$ sort letters.txt | uniq -c 
+2 A
+2 B 
+4 C
+```
+
+Combnined with other Unix tools like grep and cut, sort and uniq can be used to summarized columns of tabular data:
+```{}
+$ grep -v "^#" Mus_musculus.GRCm38.75_chr1.gtf | cut -f3 | sort | uniq -c
+25901 CDS
+7588 UTR
+36128 exon
+2027 gene
+2290 start_codon
+2299 stop_codon
+4993 transcript
+```
+
+With the -d option, uniq outputs duplicated lines only.
