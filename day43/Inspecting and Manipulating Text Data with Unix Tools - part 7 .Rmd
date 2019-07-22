@@ -1,0 +1,61 @@
+---
+title: "Inspecting and Manipulating Text Data with Unix Tools - part 7"
+output: html_notebook
+---
+
+## Join
+
+The basic syntax is join -1 <file_1_field> -2 <file_2_field> <file_1> <file_2>, where <file_1> and <file_2> are the two files to be joined by a column <file_1_field> in <file_1> and column <file_2_field> in <file_2>. 
+
+If file 2 doesn't have an entry in the column corresponding to file 1.
+Join will omit rows from file 1.
+To avoid this, GNU join implements the -a option to include unpairable lines -- ones that do not have an entry in either file.
+(This option is not implemented in BSD join.)
+
+To use -a, we specify which file is allowed to have unpairable entries:
+```{}
+$ join -1 1 -2 1 -a 1 example_sorted.bed example_lengths_alt.txt # GNU join only
+```
+
+## Text Processing with Awk
+
+### Two key parts of the Awk language
+
+- how Awk processes records
+- pattern-action pairs
+
+1. Awk processes input data a record at a time.
+   Each record is composed of *fields*, separate chunks that Awk automatically separates.
+   The clever part about Awk is that it automatically assigns the entire record to the variable $0, and field one’s value is assigned to $1, field two’s value is assigned to $2, field three’s value is assigned to $3, and so forth.
+
+2. we build Awk programs using one or more of the following structures:
+   Each pattern is an expression or regular expression pattern. Patterns are a lot like if statements in other languages: if the pattern’s expression evaluates to true or the regu‐ lar expression matches, the statements inside action are run. In Awk lingo, these are pattern-action pairs and we can chain multiple pattern-action pairs together (separa‐ ted by semicolons). If we omit the pattern, Awk will run the action on all records. If we omit the action but specify a pattern, Awk will print all records that match the pat‐ tern. This simple structure makes Awk an excellent choice for quick text-processing tasks. This is a lot to take in, but these two basic concepts—records and fields, and pattern-action pairs—are the foundation of writing text-processing programs with Awk.
+   
+   Examples:
+   
+  - mimic cat by omitting a pattern and printing an entire record with the variable $0:
+```{}
+$ awk '{ print $0 }' example.bed chr1 26 39
+chr1 32 47
+chr3 11 28
+chr1    40      49
+chr3    16      27
+chr1    9       28
+chr2    35      54
+chr1    10      19
+```
+
+Optionally, we could omit the $0, because print called without an argument would print the current record.
+
+Awk can also mimic cut:
+```{}
+$ awk '{ print $2 "\t" $3 }' example.bed 26 39
+32 47
+11 28
+40 49
+16 27
+9  28
+35 54
+10 19
+```
+
