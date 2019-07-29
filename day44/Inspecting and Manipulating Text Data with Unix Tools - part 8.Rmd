@@ -1,0 +1,60 @@
+---
+title: "Inspecting and Manipulating Text Data with Unix Tools - part 8"
+output: html_notebook
+---
+
+Awk supports arithmetic with the standard operators +, -, *, /, %, and ^.
+Suppose we wanted to write a filter that only output lines where the length of the feature was greater than 18.
+We can subtract within a pattern to calculate the length of a feature, and filter on that expression:
+```{}
+$ awk '$3 - $2 > 10' example.bed
+```
+
+We can also chain patterns, by using logical operators &&, ||, and !.
+For example, if we wanted all lines on chromosome 1 with a length greater than 10:
+```{}
+$ awk '$1 ~ /chr1/ && $3 - $2 > 10' example.bed
+```
+
+The first pattern, $1 ~ /chr1/, is how we specify a regular expression.
+Regular expressions are in slashes.
+The tilde, ~ means match; to not match the regular expression we would use !~.
+
+We can combine patterns and more complex actions than just printing the entire record.
+For example, if we wanted to add a column with the length of this feature (end position - start position) for only chromosome 2 and 3, we could ues:
+```{}
+$ awk '$1 ~ /chr2|chr3/ { print $0 "\t" $3- $2 }' example.bed
+```
+
+## Advance use cases
+
+### BEGIN and END
+
+The BEGIN pattern specifies what to do before the first record is read in, and END specifies what to do after the last recors's processing is complete.
+
+For example, suppose we wanted to calculate the mean feature length in example.bed. We would have to take the sum feature lengths, and then divide by the total number of records.
+We can do this with:
+```{}
+$ awk 'BEGIN{ s = 0 }; { s += ($3-$2) }; END{ print "mean: " s/NR };' example.bed
+```
+
+There is a special variable we've used here, one that Awk automatically assigns in addition to $0, $1, $2, etc.: NR.
+NR is the current record number, so on the last record NR is set to the total number of records processed.
+
+We can use NR to extract ranges of lines, too; for example, if we wanted to extract all lines between 3 and 5 (inclusive):
+```{}
+$ awk 'NR >=3 && NR <= 5' example.bed
+```
+
+Awk makes it easy to convert between bioinformatics files like BED and GTF. For example, we could generate a three-column BED file from Mus_muscu‐ lus.GRCm38.75_chr1.gtf as follows:
+```{}
+$ awk '!/^#/ { print $1 "\t" $4-1 "\t" $5 } Mus_muscu‐ lus.GRCm38.75_chr1.gtf
+```
+
+Awk also has a very useful data structure known as an associative array. Associative arrays behave like Python's dictionaries or hashed in other languages. 
+We can create an associative array by simply assigning a value to a key. For example, suppose we wanted to count the number of features (thid column) belonging to the gene "Lypla1". We could do this by incrementing their values in an associative array:
+```{}
+$ awk '/Lympla1/' { feature[$3] += 1}; \
+  END { for (k in feature)
+  print k "\t" feature[k]}' Mus_musculus.GRCm38.75_chr1.gtf
+```
