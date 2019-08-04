@@ -1,0 +1,55 @@
+---
+title: "Bioawk: An Awk for Biological Formats"
+output: html_notebook
+---
+
+The basic idea of Bioawk is that we specify what bioinformatics format we’re working with, and Bioawk will automatically set variables for each field (just as regular Awk sets the columns of a tabular text file to $1, $1, $2, etc.).
+
+```{}
+$ bioawk -c help
+bed:
+      1:chrom 2:start 3:end 4:name 5:score 6:strand 7:thickstart
+          8:thickend 9:rgb 10:blockcount 11:blocksizes 12:blockstarts
+sam:
+      1:qname 2:flag 3:rname 4:pos 5:mapq 6:cigar 7:rnext 8:pnext
+          9:tlen 10:seq 11:qual
+vcf:
+      1:chrom 2:pos 3:id 4:ref 5:alt 6:qual 7:filter 8:info
+gff:
+      1:seqname 2:source 3:feature 4:start 5:end 6:score 7:filter
+          8:strand 9:group 10:attribute
+fastx:
+      1:name 2:seq 3:qual 4:comment
+```
+
+Example:
+Let's read in example.bed and append a column with the length of the feature (end position - start position) for all protein coding genes:
+```{}
+$bioawk -c gff '$3 ~ /gene/ && $2 ~ /protein_coding/ \
+   {print $seqname,$end-$start}' Mus_musculus.GRCm38.75_chr1.gtf | head -n 4
+1   465597
+1   16807
+1   5485
+1   12533
+```
+
+Bioawk is also quite useful for processing FASTA/FASTQ files. For example, we could use it to turn a FASTQ file into a FASTA file:
+```{}
+bioawk -c fastx '{print ">"$name"\n"$seq}' contam.fastq | head -n 4
+>DJB775P1:248:D0MDGACXX:7:1202:12362:49613 TGCTTACTCTGCGTTGATACCACTGCTTAGATCGGAAGAGCACACGTCTGAA >DJB775P1:248:D0MDGACXX:7:1202:12782:49716 CTCTGCGTTGATACCACTGCTTACTCTGCGTTGATACCACTGCTTAGATCGG
+```
+
+Bioawk is also useful for creating a table of sequence lengths from a FASTA file. For example, to create a table of all chromosome lengths of the Mus musculus genome:
+```{}
+$ bioawk -c fastx '{print $name,length($seq)}' \
+   Mus_musculus.GRCm38.75.dna_rm.toplevel.fa.gz > mm_genome.txt
+$ head -n 4 mm_genome.txt 
+1 195471971
+10 130694993
+11 122082543
+12  120129022
+13  120421639
+14  124902244
+```
+
+Finally, Bioawk has two options that make working with plain tab-delimited files eas‐ ier: -t and -c hdr. -t is for processing general tab-delimited files; it sets Awk’s field separator (FS) and output field separator (OFS) to tabs. The option -c hdr is for unspecific tab-delimited formats with a header as the first line. This option sets field variables, but uses the names given in the header.
