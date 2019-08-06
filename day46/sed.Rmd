@@ -1,0 +1,33 @@
+---
+title: "Stream Editing with Sed"
+output: html_notebook
+---
+
+sed reads data from a file or standard input and can edit a line at a time. 
+Example: converting a file (chroms.txt) containing a single column of chromosomes in the format "chrom12", "chrom2", and so on to the format "chr12", "chr2", and so on:
+```{}
+$ head -n 3 chroms.txt # before sed chrom1 3214482 3216968
+chrom1 3216025 3216968
+chrom1 3216022 3216024
+$ sed 's/chrom/chr/' chroms.txt | head -n 3 
+chr1 3214482 3216968
+chr1 3216025 3216968
+chr1 216022 3216024
+```
+
+The syntax of sed's substitute is s/pattern/replacement/.
+
+By default, sed prints every line, making replacements to matching lines.
+Sometimes this behavior isn't what we want. We can use -n to disable sed from outputting all lines. By appending p after the last slash sed will print all lines it's made a replacement on.
+
+It's also possible to select and print certain ranges of lines with sed.
+To print the first 10 lines of a file, we use:
+```{}
+$ sed -n '1,10p' Mus_musculus.GRCm38.75_chr1.gtf
+```
+
+If we want to print lines 20 througgh 50, we would use:
+```{}
+$ sed -n '20,50p' Mus_musculus.GRCm38.75_chr1.gtf
+```
+
