@@ -1,0 +1,37 @@
+---
+title: "Named Pipes and Process Substitution"
+output: html_notebook
+---
+
+A named pipe, also known as a FIFO (First In First Out), is a special sort of file.
+Regular pipes are anonymous. Named pipes behave like files, and are persistent on your filesystem.
+We can create a named pipe with the program mkfifo:
+```{}
+$ mkfifl fqin
+$ ls -l fqin
+prw-r--r-- 1 vinceb staff 0 Aug 5 22:50 fqin
+```
+
+The p before the file permissions is for pipe.
+Just like pipes, one process writes data into the pipe, and another process reads data out of the pipe.
+We can simulate this by using rcho to redirect some text into a named pipe, and then cat to read the data back out:
+```{}
+$ echo "hello, named pipes" > fqin &
+[1] 16430
+$ cat fqin
+[1] + 16430 done
+hello, named pipes
+$ rm fqin
+```
+
+There's a way to use named pipes without having to explicitly create them.
+This is called process substitution.
+
+```{}
+$ cat <(echo "hello, process substitution)
+hello, process substitution
+```
+
+The chunk <(echo "hello, process sub stition") runs the echo command and pipes the output to an anonymous named pipe. Your shell then replaces this chunk (the <(...) part) with the path to this anonymous named pipe. No named pipes need to be explicitly created, but you get the same functionality.
+
+
