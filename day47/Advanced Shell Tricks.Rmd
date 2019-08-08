@@ -1,0 +1,26 @@
+---
+title: "Advanced Shell Tricks"
+output: html_notebook
+---
+
+## Subshells
+
+If we run two commands with command1; command2, command2 will always run, regardless of whether command1 exits successfully.
+In contrast, if we use command1 && commands, command2 will only run if command1 completed with a zero-exit status.
+Checking exit status with pipes unfortunately gets tricky.
+
+Subshells allow us to execute sequential commands together in a separate shell process.
+```{}
+$ echo "this command"; echo "that command" | sed 's/command/step/' 
+this command
+that step
+$ (echo "this command"; echo "that command") | sed 's/command/step/' 
+this step
+that step
+```
+
+In the first example, only the second command's standard out is piped into sed.
+This is because your sell interpret echo "this command" as one command and echo "that command" | sed 's/command/step/' as a second separate command.
+
+
+
