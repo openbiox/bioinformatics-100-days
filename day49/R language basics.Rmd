@@ -1,0 +1,109 @@
+---
+title: "R Language Basics"
+output: html_notebook
+---
+
+## Simple Calculations in R, Calling Functions, and Getting Help in R
+```{r}
+4+3
+```
+```{r}
+4-3
+```
+```{r}
+4*3
+```
+```{r}
+4/3
+```
+
+R has numerous mathematical functions. For example, we call the function sqrt() on a numeric argument:
+```{r}
+sqrt(3.5)
+```
+
+## Getting help in R
+Each of R's functions has integrated documentation accessible within R. 
+We can access R's built-in documentation with the help() function or its syntactic shortcut, ?:
+```{r}
+help(log)
+```
+```{r}
+?log
+```
+
+## Variables and Assigment
+To store a value for future use, we assign it to a variable using the <- assignment operator:
+```{r}
+x <- 3.1
+```
+
+Variables can also be used in expressions and passed to functions as arguments. R will substitute the variable's value during evaluation and return the results.
+```{r}
+(x+2)/2
+```
+
+When we assign a value in our R session, we're assigning it to an environment known as the global environment.
+We can see objects we've created in the global environment with the function ls():
+```{r}
+ls()
+```
+
+## Vectors, Vectorization, and Indexing
+A vector is a container of contiguous data.
+Unlike most languages, R does not have a type for a single value such as 3.1 or "AGCTACGACT". Rather, these valuse are stored in a vector of length 1.
+We can verify that values like 3.1 are vectors of length 1 by calling the function length():
+```{r}
+length(3.1)
+```
+
+To create longer vectors, we combine values with the function c():
+```{r}
+x <- c(56, 95.3, 0.4)
+y <- c(3.2, 1.1, 0.2)
+```
+
+R's vector are the basis of one of R's most important features: vectorization.
+Vectorization allows us to loop over vectors elementwise, without the need to write an explicit loop.
+```{r}
+x + y
+```
+
+Integer sequences crop up all over computing and statistics, so R has a few ways of creating these vectors.
+```{r}
+seq(3, 5)
+```
+```{r}
+1:5
+```
+
+There's one important subtle behavior of vectorized operations applied to two vectors simultaneously: if one vector is longer than the other, R will recycle the values in the shorter vector.
+R won't watn you whrn this happens (unless the recycled shorter vector's length isn't a multiple of the longer vector's length).
+
+```{r}
+x - 3
+```
+
+```{r}
+x/2
+```
+
+```{r}
+c(1,2) + c(0, 0, 0, 0)
+```
+
+```{r}
+c(1,2) + c(0, 0, 0)
+```
+
+Many of R's mathematical functions are all vectorized:
+```{r}
+sqrt(x)
+```
+```{r}
+round(sqrt(x), 3)
+```
+```{r}
+log(x)/2 + 1
+```
+
