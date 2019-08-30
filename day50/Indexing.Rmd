@@ -1,0 +1,149 @@
+---
+title: "Indexing"
+output: html_notebook
+---
+
+We can access specific elements of a vector through indexing.
+An index is an integer that specifies which element in the vector to retrieve.
+```{r}
+x <- c(56, 95.3, 0.4)
+x[2]
+```
+
+R's vectors are 1-indexed, meaning that the index 1 correspnds to the first element in a list.
+```{r}
+x[1]
+```
+
+Trying to access an element that doesn't exist in the vector leads R to return NA, the "not available" missing value.
+```{r}
+x[4]
+```
+
+We can change specific vector elements by combining indexing and assignments.
+```{r}
+x[3] <- 0.5
+```
+
+Vectors can also have names, you can set with c():
+```{r}
+b <- c(a = 3.4, b = 5.4, c = 0.4)
+b
+```
+
+Access names of a vector:
+```{r}
+names(b)
+```
+
+Change names:
+```{r}
+names(b) <- c("x", "y", "z")
+```
+
+Access elements by their name:
+```{r}
+b['x']
+```
+```{r}
+b['y']
+```
+```{r}
+b['z']
+```
+
+Subsetting:
+```{r}
+x[c(2, 3)]
+```
+
+Extracting contiguous slices of a vector:
+```{r}
+z <- c(3.4, 2.2, 0.4, -0.4, 1.2)
+z[3:5]
+```
+
+Exclude certain elements from lists using negative indexes:
+```{r}
+z[c(-4, -5)]
+```
+
+Indices are also often used to reorder elements.
+Rearrage the elements of this vector z with:
+```{r}
+z[c(3, 2, 4, 5, 1)]
+```
+
+Reverse the elements of this vector:
+```{r}
+z[5:1]
+```
+
+We can use other R functions to create indexes for us.
+For example, the function order() returns a vector of indexes that indicate the (ascending) order of the elements.
+```{r}
+order(z)
+```
+```{r}
+z[order(z)]
+```
+```{r}
+order(z, decreasing = TRUE)
+```
+```{r}
+z[order(z, decreasing = TRUE)]
+```
+
+Repeat certain vaues in vectors:
+```{r}
+z[c(2, 2, 1, 4, 5, 4, 3)]
+```
+
+Resample a vector is to randomly sample its indexes uding the sample() function:
+```{r}
+set.seed(0)
+i <- sample(length(z), replace = TRUE)
+i
+```
+
+```{r}
+z[i]
+```
+
+Use comparison operatoes like ==, !=, <, <=, >, and >= to builf logical vectors of TRUE and FALSE values indicating the result of the comparison test for each element in the vector.
+```{r}
+v <- c(2.3, 6, -3, 3.8, 2, -1.1)
+v == 6
+```
+
+
+Indexing vectors with logival vectors
+```{r}
+v[c(TRUE, TRUE, FALSE, TRUE, FALSE, FALSE)]
+```
+
+Subset by creating logival vectors using comparison operators:
+```{r}
+v[v>2]
+```
+
+```{r}
+v > 2 & v < 4
+```
+
+```{r}
+v[v > 2 & v < 4]
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
