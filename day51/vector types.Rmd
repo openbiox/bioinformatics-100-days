@@ -1,0 +1,68 @@
+---
+title: "Vector types"
+output: html_notebook
+---
+
+R's vectors must contain elements of the same type.
+R supports the following vector types:
+
+- Numeric
+- Integer
+- Character
+- Logical
+- Complex (represent complex numbers)
+- raw (encode raw bytes)
+
+## Type coercion in R
+R would coerce the logical TRUE and FALSE values to 1 and 0, as these represent TRUE and FALSE without a loss of informtaion:
+```{r}
+c(4.3, TRUE, 2.1, FALSE)
+```
+
+```{r}
+c(-9L, 3.4, 1.2, 3L)
+```
+
+```{r}
+c(43L, TRUE, 3.2413341, "a string")
+```
+
+We can see any object's type using the function typeof():
+```{r}
+q <- c(2, 3.5, -1.1, 3.8)
+typeof(q)
+```
+
+## Factors 
+Factors stored categorical variables, such as a treatment group, strand, or chromosome.
+
+Create a factor from vector using the function factor():
+```{r}
+chr_hits <- c("chr2", "chr2", "chr3", "chrX", "chr2", "chr3", "chr3")
+hits <- factor(chr_hits)
+hits
+```
+
+The levels are the possible values a factor can contain. 
+View a factor's levels by using the function levels():
+```{r}
+levels(hits)
+```
+
+When creating our factor, we could use the argument levels to include all relevant levels:
+```{r}
+hits <- factor(chr_hits, levels = c("chrX", "chrY", "chr2", "chr3", "chr4"))
+hits
+```
+
+Add or rename existing levels with the function levels().
+```{r}
+levels(hits) <- list(chrX = "chrX", chrY = "chrY", chr2 = "chr2", chr3 = "chr3", chr4 = "chr4")
+hits
+```
+
+Count up how many of each level there are in a factor:
+```{r}
+table(hits)
+```
+
