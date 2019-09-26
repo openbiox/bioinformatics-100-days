@@ -1,0 +1,78 @@
+---
+title: "Working with and Visualizing Data in R"
+output: 
+  md_document:
+    variant: markdown_github
+---
+
+## Loading Data into R
+```{r}
+d <- read.csv("Dataset_S1.txt")
+```
+
+## Exploring and Transforming Dataframes
+```{r}
+head(d, n=3)
+```
+
+```{r}
+nrow(d)
+```
+
+```{r}
+ncol(d)
+```
+
+```{r}
+dim(d)
+```
+
+```{r}
+colnames(d)
+```
+
+change the 12th column name
+```{r}
+colnames(d)[12]
+```
+```{r}
+colnames(d)[12] <- "percent.GC"
+```
+```{r}
+colnames(d)[12]
+```
+
+The most common way to access a single column of a dataframe is with the dollar sign operator.
+```{r}
+d$depth
+```
+
+```{r}
+mean(d$depth)
+```
+
+```{r}
+summary(d$depth)
+```
+
+To access the first two columns 
+```{r}
+d[,1:2]
+```
+
+Similarly, we could use the column names
+```{r}
+d[,c("start", "end")]
+```
+
+If we only wanted the first row of start and end positions, we'd use:
+```{r}
+d[1, c("start", "end")]
+```
+
+Let's add an additional column to our dataframe that indicates whether a window is in the centromere region.
+We can append to d dataframe using comparison and logical operations:
+```{r}
+d$cent <- d$start >= 25800000 & d$end <= 29700000
+```
+
